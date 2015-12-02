@@ -1,5 +1,5 @@
 package project6;
 
-public enum PossiblePegResponsesEnum {
+public enum PegResponseColors {
 	COLOR, WHITE, INCORRECT 
 }
