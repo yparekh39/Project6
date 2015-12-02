@@ -1,5 +1,5 @@
 package project6;
 
-public enum PegColor {
+public enum PegColors {
 	RED, BLUE, GREEN, ORANGE, YELLOW, PURPLE
 }
