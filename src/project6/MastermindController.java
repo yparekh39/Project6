@@ -4,12 +4,20 @@ import java.util.HashSet;
 
 public class MastermindController {
 	
-	//Sets the correct answer given input from the user (AI or Player)
+	/* Sets the correct answer given input from the user (AI or Player)
+	 */
 	public void setAnswer(PegCombination[] answer){
 		MastermindModel.answer = answer;
 	}
 	
-	//Takes a guess from the user (AI or Player) and returns a response based on the accuracy of the guess
+	/* Takes a guess from the user (AI or Player) and returns a peg response based on the accuracy of the guess.
+	 * The peg response at first mirrors the answer, so that pegs in the answer that are also in the guess
+	 * (whether position is correct or not) are marked in the peg response and thus not compared a second time against 
+	 * other pegs in the guess.
+	 * After the pegs in the guess have all been checked against the answer, the pegs are added into a final peg response
+	 * in the order BLACK, WHITE, NONE.
+	 * Ex: The accuracy check is BLACK NONE NONE WHITE. The final peg response is BLACK WHITE NONE NONE.
+	 */
 	public PegResponse guess(PegCombination[] attempt){
 		int guessIndex = 0;
 		
