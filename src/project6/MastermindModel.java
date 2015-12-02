@@ -22,7 +22,7 @@ public class MastermindModel {
 		}
 	}
 	
-	private HashSet<PegCombination> totalCombinations;
+	private HashSet<PegCombination> totalCombinations = new HashSet<PegCombination>();
 	private HashSet<PegCombination> validCombinations;
 	
 	MastermindModel() {
