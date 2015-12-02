@@ -16,6 +16,7 @@ public class AIController {
 		return new PegCombination(pegs);
 	}
 	
+	
 	public static HashSet<PegCombination> generateAllPegCombinations(){
 		HashSet<PegCombination> totalCombinations = new HashSet<PegCombination>();
 		for(int i = 0; i < 5; i++) {

@@ -1,7 +1,7 @@
 package project6;
 
 public class PegResponse {
-    PegResponseColors[] response;
+	public PegResponseColors[] response;
     
     PegResponse(PegResponseColors[] response) {
     	this.response = response;
