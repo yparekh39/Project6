@@ -5,15 +5,40 @@ import java.util.Scanner;
 
 public class MastermindController {
 	
+	/* Runs the game
+	 * 
+	 * Asks if AI or Player will set the code
+	 * Runs takeTurn in loop - loop breaks when game is over.
+	 * Asks if Player would like to play again
+	 * 
+	 */
+	public void runGame(){
+		
+	}
+	
 	/* Sets the correct answer given input from the user (AI or Player)
 	 */
 	public void setAnswer(PegCombination answer){
 		MastermindModel.answer = answer;
 	}
 	
+	
+	/* Fundamental turn operation of game
+	 * 
+	 * 1. Prompts the user for a guess
+	 * 2. Gives a user the response based on accuracy of guess
+	 */
+	public void takeTurn(){
+		PegCombination guess = promptGuess();
+		PegResponse accuracyFeedback = new PegResponse();
+		accuracyFeedback = userGuess(guess);
+	}
+	
+	
+	
 	/* Takes a guess from the user (AI or Player) and updates the turn within the model with that guess and the 
 	 * corresponding peg response.
-	 * Then it returns a peg response to the user based on the accuracy of the guess.
+	 * Then returns a peg response based on the accuracy of the guess.
 	 * The peg response at first mirrors the answer, so that pegs in the answer that are also in the guess
 	 * (whether position is correct or not) are marked in the peg response and thus not compared a second time against 
 	 * other pegs in the guess.
@@ -21,7 +46,7 @@ public class MastermindController {
 	 * in the order BLACK, WHITE, NONE.
 	 * Ex: The accuracy check is BLACK NONE NONE WHITE. The final peg response is BLACK WHITE NONE NONE.
 	 */
-	public PegResponse guess(PegCombination attemptCombo){
+	public PegResponse userGuess(PegCombination attemptCombo){
 		int guessIndex = 0;
 		int blackPegCount = 0; //used for win checking
 		PegColors[] attempt = attemptCombo.pegs;
@@ -98,10 +123,81 @@ public class MastermindController {
 		return result;
 	}
 	
-	public void promptGuess(){
+	//asks for guess from user and returns the guess as a PegCombination once valid
+	public PegCombination promptGuess(){
 		viewConsole.printPrompt();
 		Scanner kb = new Scanner(System.in);
 		char[] guess = kb.nextLine().toCharArray();
+		
+		if(!legalGuess(guess)){
+			System.out.println("Invalid input. Please Guess Again.");
+			promptGuess();
+		}
+		
+		PegCombination attempt = new PegCombination();
+		attempt = charToPegCombination(guess);
+		
+		return attempt;
+	}
+	
+	//checks if guess is a valid guess
+	public boolean legalGuess(char[] guess){
+		boolean legal = true;
+		if(guess.length > 4)
+			legal = false;
+		
+		int i = 0;
+		while(legal == true && i < 4){
+			switch (guess[i]){
+				case 'R':
+					break;
+				case 'U':
+					break;
+				case 'G':
+					break;
+				case 'O':
+					break;
+				case 'Y':
+					break;
+				case 'P':
+					break;
+				default:
+					legal = false;
+					break;
+			}
+			
+		}
+		return legal;
+	}
+	
+	//converts a char[] (user input) into a peg combination
+	public PegCombination charToPegCombination(char[] guess){
+		PegCombination result = new PegCombination(new PegColors[4]);
+		
+		for(int i = 0; i < 4; i++){
+			switch(guess[i]){
+			case 'R':
+				result.pegs[i] = PegColors.RED;
+				break;
+			case 'U':
+				result.pegs[i] = PegColors.BLUE;
+				break;
+			case 'G':
+				result.pegs[i] = PegColors.GREEN;
+				break;
+			case 'O':
+				result.pegs[i] = PegColors.ORANGE;
+				break;
+			case 'Y':
+				result.pegs[i] = PegColors.YELLOW;
+				break;
+			case 'P':
+				result.pegs[i] = PegColors.PURPLE;
+				break;
+			}
+		}
+		
+		return result;
 	}
 	
 	
