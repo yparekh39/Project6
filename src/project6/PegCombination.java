@@ -34,10 +34,10 @@ public class PegCombination {
 					result += "R";
 					break;
 				case GREEN:
-					result += "U";
+					result += "G";
 					break;
 				case BLUE:
-					result += "G";
+					result += "U";
 					break;
 				case ORANGE:
 					result += "O";

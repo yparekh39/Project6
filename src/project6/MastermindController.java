@@ -57,7 +57,6 @@ public class MastermindController {
 	 */
 	public static PegResponse pegResponse(PegCombination attemptCombo, PegCombination answerCombo){
 		int guessIndex = 0;
-		int blackPegCount = 0; //used for win checking
 		PegColors[] attempt = attemptCombo.pegs;
 		PegColors[] answer = answerCombo.pegs;
 		//create default peg response (ie all clear pegs)
@@ -71,7 +70,7 @@ public class MastermindController {
 			//if it is, mark that answer position in response as accounted for (ie black)
 			if(resultPegs[guessIndex] == PegResponseColors.NONE && attempt[guessIndex] == answer[guessIndex]){
 				resultPegs[guessIndex] = PegResponseColors.BLACK;
-				blackPegCount++;
+				MastermindModel.blackPegCount++;
 			}
 			//check rest of answer to see if peg at guessIndex is correct color
 			//if it is, mark that answer position in response as accounted for (ie white)

@@ -4,10 +4,11 @@ public class Main {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		PegCombination answer = AIController.generateRandomPegCombination();
-		MastermindController.setAnswer(answer);
-		System.out.println(MastermindModel.answer.toString());
-		MastermindController.takeTurn();
+		while(MastermindModel.currentTurn < 12 || MastermindModel.blackPegCount < 4){
+			PegCombination answer = AIController.generateRandomPegCombination();
+			MastermindController.setAnswer(answer);
+			MastermindController.takeTurn();
+		}
 		//viewConsole.printBoard();
 	}
 
