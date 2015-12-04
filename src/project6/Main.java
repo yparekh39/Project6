@@ -18,7 +18,6 @@ public class Main {
 			PegCombination answer = new PegCombination();
 			
 			/* Player guessing code
-			 * 
 			 */
 			if(MastermindModel.playerGuessing){
 				System.out.println("player");
@@ -26,19 +25,17 @@ public class Main {
 			}
 			
 			/* AI guessing code
-			 * 
 			 */
 			else if(!MastermindModel.playerGuessing){
+				System.out.print("Set the code and the AI will try to crack it!\nCode:");
+				Scanner kb = new Scanner(System.in);
+				String userCode = kb.nextLine();
+				char[] userCodeChar = userCode.toCharArray();
+				answer = MastermindController.charToPegCombination(userCodeChar);
 				System.out.println("ai");
-				answer = new PegCombination(new PegColors[]{PegColors.GREEN, PegColors.GREEN, PegColors.GREEN, PegColors.GREEN});
+				//answer = new PegCombination(new PegColors[]{PegColors.YELLOW, PegColors.PURPLE, PegColors.ORANGE, PegColors.ORANGE});
 			}
 			MastermindController.setAnswer(answer);
-			System.out.println(MastermindModel.answer.toString());
-			
-			
-			/*Old Code
-			 */
-			//MastermindController.setAnswer(answer);
 			//System.out.println(MastermindModel.answer.toString());
 			
 			//print starting board - console

@@ -20,15 +20,15 @@ public class AIController {
 	
 	public static HashSet<PegCombination> generateAllPegCombinations(){
 		HashSet<PegCombination> totalCombinations = new HashSet<PegCombination>();
-		for(int i = 0; i < 5; i++) {
+		for(int i = 0; i < 6; i++) {
 			PegColors[] values = PegColors.values();
 			PegColors[] pegCombo = new PegColors[4];
 			pegCombo[0] = values[i];
-			for(int j = 0; j < 5; j++){
+			for(int j = 0; j < 6; j++){
 				pegCombo[1] = values[j];
-				for(int k = 0; k < 5; k++){
+				for(int k = 0; k < 6; k++){
 					pegCombo[2] = values[k];
-					for(int l = 0; l < 5; l++){
+					for(int l = 0; l < 6; l++){
 						pegCombo[3] = values[l];
 						PegCombination toBeAdded = new PegCombination();
 						toBeAdded.pegs[0] = pegCombo[0];
@@ -54,10 +54,6 @@ public class AIController {
 				//System.out.print(combo + "........");
 				//System.out.println(comboGuessComparison);
 				i.remove();
-			}
-			else{
-				System.out.println(combo + ".........");
-				System.out.println(comboGuessComparison);
 			}
 		}
 		/*

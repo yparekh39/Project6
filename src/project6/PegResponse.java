@@ -17,7 +17,7 @@ public class PegResponse {
 			return false;
 		}
 		
-		for(int i = 0; i < 3; i++) {
+		for(int i = 0; i < 4; i++) {
 			if (!(((PegResponse)pegResponse).response[i].equals(response[i]))) {
 				return false;
 			}
