@@ -8,13 +8,37 @@ public class Main {
 		String playAgain;
 		viewConsole.printInstructions();
 		
-		//ASK FOR GUI OR CONSOLE
-		MastermindController.playerOrAI();
+		
 		
 		do{
 			MastermindController.resetGame();
-			PegCombination answer = AIController.generateRandomPegCombination();
+			//ASK FOR GUI OR CONSOLE
+			MastermindController.playerOrAI();
+			
+			PegCombination answer = new PegCombination();
+			
+			/* Player guessing code
+			 * 
+			 */
+			if(MastermindModel.playerGuessing){
+				System.out.println("player");
+				answer = AIController.generateRandomPegCombination();
+			}
+			
+			/* AI guessing code
+			 * 
+			 */
+			else if(!MastermindModel.playerGuessing){
+				System.out.println("ai");
+				answer = new PegCombination(new PegColors[]{PegColors.GREEN, PegColors.GREEN, PegColors.GREEN, PegColors.GREEN});
+			}
 			MastermindController.setAnswer(answer);
+			System.out.println(MastermindModel.answer.toString());
+			
+			
+			/*Old Code
+			 */
+			//MastermindController.setAnswer(answer);
 			//System.out.println(MastermindModel.answer.toString());
 			
 			//print starting board - console

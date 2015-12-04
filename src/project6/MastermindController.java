@@ -33,11 +33,17 @@ public class MastermindController {
 		PegResponse pegResponse = new PegResponse();
 		pegResponse = pegResponse(guess, MastermindModel.answer);
 		
+		for(int i = 0; i < 4; i++){
+			if(pegResponse.response[i] == PegResponseColors.BLACK){
+				MastermindModel.blackPegCount++;
+			}
+		}
+		
 		Turn turn = new Turn(guess, pegResponse);
 		MastermindModel.GameState[MastermindModel.currentTurn] = turn;
 		MastermindModel.currentTurn++;
 		//print board - console
-		if(MastermindModel.playerGuessing)
+		if(MastermindModel.playingOnConsole)
 			viewConsole.printBoard();
 		//print board - GUI
 		else{
@@ -73,7 +79,7 @@ public class MastermindController {
 			if(attempt[i] == answer[i]){
 				resultPegs[i] = PegResponseColors.BLACK;
 				guessMirrorResponsePegs[i] = PegResponseColors.BLACK;
-				MastermindModel.blackPegCount++;
+				//MastermindModel.blackPegCount++;
 			}
 		}
 		//check color
@@ -89,37 +95,6 @@ public class MastermindController {
 			}
 			guessIndex++;
 		}
-		
-		/* OLD ALGORITHM THAT HAS A BROKEN POSITION CHECKER
-		 * WE HAVE TO CHECK FOR POSITION OF ALL THE PEGS BEFORE CHECKING ANY OF THE COLORS
-		 * OR ELSE THE CORRECT POSITION PEGS WILL BE OVERLOOKED IF ANOTHER PEG AHEAD OF IT 
-		 * WAS THE CORRECT COLOR
-		//check accuracy of guess
-		while(guessIndex < 4){
-			int answerIndex = 0;
-			//check if peg at guessIndex is in correct position
-			//if it is, mark that answer position in response as accounted for (ie black)
-			if(resultPegs[guessIndex] == PegResponseColors.NONE && attempt[guessIndex] == answer[guessIndex]){
-				resultPegs[guessIndex] = PegResponseColors.BLACK;
-				MastermindModel.blackPegCount++;
-			}
-			//check rest of answer to see if peg at guessIndex is correct color
-			//if it is, mark that answer position in response as accounted for (ie white)
-			else{
-				while(answerIndex < 4){
-					if(attempt[guessIndex] == answer[answerIndex]){
-						if(resultPegs[answerIndex] == PegResponseColors.NONE){
-							resultPegs[answerIndex] = PegResponseColors.WHITE;
-							break; //exit loop, (we have accounted for this guess)
-						}
-							
-					}
-					answerIndex++;
-				}
-			}
-			guessIndex++;
-		}*/
-		
 		
 		//add resultPegs[] to finalResultPegs[] in order of BLACK, WHITE, NONE
 		PegResponseColors[] finalResultPegs = new PegResponseColors[4];
@@ -155,12 +130,28 @@ public class MastermindController {
 	//asks for guess from user and returns the guess as a PegCombination once valid
 	public static PegCombination promptGuess(){
 		String guess;
+		PegCombination guessCombo = new PegCombination();
 		//prompts and takes guess - console
-		if(MastermindModel.playerGuessing){
+		if(MastermindModel.playingOnConsole && MastermindModel.playerGuessing){
 			viewConsole.printColorChoices();
 			viewConsole.printPrompt();
 			Scanner kb = new Scanner(System.in);
 			guess = kb.nextLine();
+			guessCombo = PlayerController.submitGuess(guess);
+		}
+		else if(MastermindModel.playingOnConsole){
+			viewConsole.printColorChoices();
+			viewConsole.printPrompt();
+			PegCombination AIGuess = new PegCombination();
+			if(MastermindModel.currentTurn > 0){
+				AIGuess = AIController.getNextGuess(MastermindModel.GameState[MastermindModel.currentTurn - 1].pegCombination, MastermindModel.GameState[MastermindModel.currentTurn - 1].pegResponse);
+			}
+			else{
+				AIGuess = new PegCombination(new PegColors[]{PegColors.RED, PegColors.RED, PegColors.GREEN, PegColors.GREEN});
+			}
+			
+			System.out.println(AIGuess);
+			guessCombo = AIGuess;
 		}
 		//prompts and takes guess - GUI
 		else{
@@ -168,7 +159,8 @@ public class MastermindController {
 			guess = "";//fix later
 		}
 		
-		return PlayerController.submitGuess(guess);
+		//return PlayerController.submitGuess(guess);
+		return guessCombo;
 	}
 	
 	//checks if guess is a valid guess
@@ -243,7 +235,7 @@ public class MastermindController {
 		Scanner kb = new Scanner(System.in);
 		String input = kb.nextLine();
 		if(input.equals("P") || input.equals("A"))
-			MastermindModel.playerGuessing = input == "P" ? true:false;
+			MastermindModel.playerGuessing = (input.equals("P")) ? true:false;
 		else
 			playerOrAI();
 		
