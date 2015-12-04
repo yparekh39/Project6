@@ -134,6 +134,7 @@ public class MastermindController {
 	
 	//asks for guess from user and returns the guess as a PegCombination once valid
 	public static PegCombination promptGuess(){
+		viewConsole.printColorChoices();
 		viewConsole.printPrompt();
 		Scanner kb = new Scanner(System.in);
 		String guess = kb.nextLine();

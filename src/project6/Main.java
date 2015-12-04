@@ -6,12 +6,13 @@ public class Main {
 
 	public static void main(String[] args) {
 		String playAgain;
+		viewConsole.printInstructions();
 		
 		do{
 			MastermindController.resetGame();
 			PegCombination answer = AIController.generateRandomPegCombination();
 			MastermindController.setAnswer(answer);
-			System.out.println(MastermindModel.answer.toString());
+			//System.out.println(MastermindModel.answer.toString());
 			viewConsole.printBoard();
 			
 			while(MastermindModel.blackPegCount < 4 && MastermindModel.currentTurn < 12){
@@ -20,11 +21,11 @@ public class Main {
 			}
 			
 			System.out.println("You win!!!");
-			System.out.println("Want to play again?");
+			System.out.println("Want to play again? {Y/N}");
 			Scanner kb = new Scanner(System.in);
 			playAgain = kb.nextLine();
 
-		}while(playAgain.equals("Y"));
+		}while(playAgain.equals("Y") || playAgain.equals("y"));
 		
 		System.out.println("Game over. Thanks for playing!");
 

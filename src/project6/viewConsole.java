@@ -1,6 +1,15 @@
 package project6;
 
 public class viewConsole {
+	//print the instructions
+	public static void printInstructions(){
+		System.out.println("Welcome to MattsterMind!");
+	}
+	
+	//print the peg color choices
+	public static void printColorChoices(){
+		System.out.println("\nPeg Colors:\nR U G O Y P");
+	}
 	
 	//print the board
 	public static void printBoard(){
@@ -23,7 +32,7 @@ public class viewConsole {
 		}
 	}
 	public static void printPrompt(){
-		System.out.println("Guess!");
+		System.out.print("\nGuess: ");
 	}
 	
 
