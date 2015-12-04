@@ -12,7 +12,7 @@ public class Main {
 			MastermindController.resetGame();
 			PegCombination answer = AIController.generateRandomPegCombination();
 			MastermindController.setAnswer(answer);
-			//System.out.println(MastermindModel.answer.toString());
+			System.out.println(MastermindModel.answer.toString());
 			viewConsole.printBoard();
 			
 			while(MastermindModel.blackPegCount < 4 && MastermindModel.currentTurn < 12){

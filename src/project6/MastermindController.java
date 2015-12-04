@@ -62,8 +62,42 @@ public class MastermindController {
 		PegColors[] answer = answerCombo.pegs;
 		//create default peg response (ie all clear pegs)
 		PegResponseColors[] resultPegs = new PegResponseColors[4];
+		PegResponseColors[] guessMirrorResponsePegs = new PegResponseColors[4];
 		for(int j = 0; j < 4; j++){ resultPegs[j] = PegResponseColors.NONE; }
 		
+		/*Updates the current turn in the gamestate array with the current guess*/
+		
+		/* Check accuracy of guess
+		 * 1. Compares each guess peg to its parallel answer peg to determine
+		 * if any are in the correct position. Flags pegs in both guess and local
+		 * answer that are.
+		 * 2. Compares pegs that were not in the correct position to the answer
+		 * to determine if any are the correct color. Flags pegs in local answer
+		 * that are.
+		 */
+		//check position
+		for(int i = 0; i < 4; i++){
+			if(attempt[i] == answer[i]){
+				resultPegs[i] = PegResponseColors.BLACK;
+				guessMirrorResponsePegs[i] = PegResponseColors.BLACK;
+				MastermindModel.blackPegCount++;
+			}
+		}
+		//check color
+		guessIndex = 0;
+		while(guessIndex < 4){
+			int answerIndex = 0;
+			while(answerIndex < 4){
+				if(attempt[guessIndex] == answer[answerIndex] && guessMirrorResponsePegs[guessIndex] == PegResponseColors.NONE && resultPegs[answerIndex] == PegResponseColors.NONE){
+					resultPegs[answerIndex] = PegResponseColors.WHITE;
+					break;//exit loop (we have accounted for this guess and needn't compare it to other pegs in the answer)
+				}
+				answerIndex++;
+			}
+			guessIndex++;
+		}
+		
+		/*
 		//check accuracy of guess
 		while(guessIndex < 4){
 			int answerIndex = 0;
@@ -88,7 +122,7 @@ public class MastermindController {
 				}
 			}
 			guessIndex++;
-		}
+		}*/
 		
 		
 		//add resultPegs[] to finalResultPegs[] in order of BLACK, WHITE, NONE
@@ -117,16 +151,6 @@ public class MastermindController {
 		
 		//set up final peg response
 		PegResponse result = new PegResponse(finalResultPegs);
-		
-		//update the model
-		/*MastermindModel.GameState[MastermindModel.currentTurn].guessThisTurn = attemptCombo;
-		MastermindModel.GameState[MastermindModel.currentTurn].pegResponseThisTurn = result;
-		MastermindModel.currentTurn++;
-		
-		//is game over?
-		if(MastermindModel.currentTurn == 12 || blackPegCount == 4 ){
-			//end game code
-		}*/
 		
 		//return peg response
 		return result;
@@ -206,6 +230,7 @@ public class MastermindController {
 		MastermindModel.GameState = new Turn[12];
 		MastermindModel.currentTurn = 0;
 		MastermindModel.blackPegCount = 0;
+		MastermindModel.playerGuessing = true;
 	}
 	
 }
