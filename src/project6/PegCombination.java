@@ -27,30 +27,38 @@ public class PegCombination {
 	
 	public String toString(){
 		String result = "";
+		if(pegs == null)
+			result = "----";
 		
-		for(int i = 0; i < 4; i++){
-			switch(pegs[i]){
-				case RED:
-					result += "R";
-					break;
-				case GREEN:
-					result += "G";
-					break;
-				case BLUE:
-					result += "U";
-					break;
-				case ORANGE:
-					result += "O";
-					break;
-				case YELLOW:
-					result += "Y";
-					break;
-				case PURPLE:
-					result += "P";
-					break;
-					
+		else{
+			for(int i = 0; i < 4; i++){
+				switch(pegs[i]){
+					case RED:
+						result += "R";
+						break;
+					case GREEN:
+						result += "G";
+						break;
+					case BLUE:
+						result += "U";
+						break;
+					case ORANGE:
+						result += "O";
+						break;
+					case YELLOW:
+						result += "Y";
+						break;
+					case PURPLE:
+						result += "P";
+						break;
+					default:
+						result+= "-";
+						break;
+						
+				}
 			}
 		}
+		
 		return result;
 	}
 }

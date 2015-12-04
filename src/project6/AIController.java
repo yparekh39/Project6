@@ -22,15 +22,20 @@ public class AIController {
 		HashSet<PegCombination> totalCombinations = new HashSet<PegCombination>();
 		for(int i = 0; i < 5; i++) {
 			PegColors[] values = PegColors.values();
-			PegColors[] pegs = new PegColors[4];
-			pegs[0] = values[i];
+			PegColors[] pegCombo = new PegColors[4];
+			pegCombo[0] = values[i];
 			for(int j = 0; j < 5; j++){
-				pegs[1] = values[j];
+				pegCombo[1] = values[j];
 				for(int k = 0; k < 5; k++){
-					pegs[2] = values[k];
+					pegCombo[2] = values[k];
 					for(int l = 0; l < 5; l++){
-						pegs[3] = values[l];
-						totalCombinations.add(new PegCombination(pegs));
+						pegCombo[3] = values[l];
+						PegCombination toBeAdded = new PegCombination();
+						toBeAdded.pegs[0] = pegCombo[0];
+						toBeAdded.pegs[1] = pegCombo[1];
+						toBeAdded.pegs[2] = pegCombo[2];
+						toBeAdded.pegs[3] = pegCombo[3];
+						totalCombinations.add(toBeAdded);
 					}
 				}
 			}
@@ -43,15 +48,43 @@ public class AIController {
 		
 		while(i.hasNext()){
 			PegCombination combo = i.next();
-			if(!response.equals(MastermindController.pegResponse(lastGuess, combo))){
+			PegResponse comboGuessComparison = MastermindController.pegResponse(lastGuess, combo);
+			//comboGuessComparison = MastermindController.pegResponse(lastGuess, MastermindModel.answer);
+			if(!(response.equals(comboGuessComparison))){
+				//System.out.print(combo + "........");
+				//System.out.println(comboGuessComparison);
 				i.remove();
 			}
+			else{
+				System.out.println(combo + ".........");
+				System.out.println(comboGuessComparison);
+			}
 		}
-		if (!AIModel.validCombinations.contains(lastGuess)) {
+		/*
+		if (!(AIModel.validCombinations.contains(lastGuess))) {
+			return null;
+		}*/
+		//Random rand = new Random();
+		//return (PegCombination) AIModel.validCombinations.toArray()[rand.nextInt(AIModel.validCombinations.size())];
+		Iterator<PegCombination> j = AIModel.validCombinations.iterator();
+		if(j.hasNext())
+			return j.next();
+		else{
+			System.out.println("null");
 			return null;
 		}
-		Random rand = new Random();
-		return (PegCombination) AIModel.validCombinations.toArray()[rand.nextInt(AIModel.validCombinations.size())];
+	}
+	
+	public static PegCombination submitGuess(String guess){
+		guess.replaceAll("\\s+","");
+		char[] guessArray = guess.toCharArray();
+		
+		if(!MastermindController.legalGuess(guessArray)){
+			System.out.println("Invalid input. Please Guess Again.");
+			return null;
+		}
+		
+		return MastermindController.charToPegCombination(guessArray);
 	}
 	
 }

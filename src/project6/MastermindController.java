@@ -23,8 +23,7 @@ public class MastermindController {
 	}
 	
 	
-	/* Fundamental turn operation of game
-	 * 
+	/* TURN HANDLING
 	 * 1. Prompts the user for a guess
 	 * 2. Gives a user the response based on accuracy of guess
 	 */
@@ -34,62 +33,68 @@ public class MastermindController {
 		PegResponse pegResponse = new PegResponse();
 		pegResponse = pegResponse(guess, MastermindModel.answer);
 		
+		for(int i = 0; i < 4; i++){
+			if(pegResponse.response[i] == PegResponseColors.BLACK){
+				MastermindModel.blackPegCount++;
+			}
+		}
+		
 		Turn turn = new Turn(guess, pegResponse);
 		MastermindModel.GameState[MastermindModel.currentTurn] = turn;
 		MastermindModel.currentTurn++;
-		viewConsole.printBoard();
+		//print board - console
+		if(MastermindModel.playingOnConsole)
+			viewConsole.printBoard();
+		//print board - GUI
+		else{
+			//print board - GUI
+			//TODO
+		}
 		
-		/* Check if game over
-		 */
 		
 	}
 	
-	
-	
-	/* Takes a guess from the user (AI or Player) and updates the turn within the model with that guess and the 
-	 * corresponding peg response.
-	 * Then returns a peg response based on the accuracy of the guess.
-	 * The peg response at first mirrors the answer, so that pegs in the answer that are also in the guess
-	 * (whether position is correct or not) are marked in the peg response and thus not compared a second time against 
-	 * other pegs in the guess.
-	 * After the pegs in the guess have all been checked against the answer, the pegs are added into a final peg response
-	 * in the order BLACK, WHITE, NONE.
-	 * Ex: The accuracy check is BLACK NONE NONE WHITE. The final peg response is BLACK WHITE NONE NONE.
-	 */
+	/* GUESS HANDLING
+	* 1. Compares each guess peg to its parallel answer peg to determine
+	* if any are in the correct position. Flags pegs in both guess and local
+	* answer that are.
+	* 2. Compares pegs that were not in the correct position to the answer
+	* to determine if any are the correct color. Flags pegs in local answer
+	* that are.*/
 	public static PegResponse pegResponse(PegCombination attemptCombo, PegCombination answerCombo){
 		int guessIndex = 0;
 		PegColors[] attempt = attemptCombo.pegs;
 		PegColors[] answer = answerCombo.pegs;
 		//create default peg response (ie all clear pegs)
 		PegResponseColors[] resultPegs = new PegResponseColors[4];
+		PegResponseColors[] guessMirrorResponsePegs = new PegResponseColors[4];
 		for(int j = 0; j < 4; j++){ resultPegs[j] = PegResponseColors.NONE; }
 		
-		//check accuracy of guess
+		/*Updates the current turn in the gamestate array with the current guess*/
+		
+		
+		// NEW ALGORITHM
+		//check position
+		for(int i = 0; i < 4; i++){
+			if(attempt[i] == answer[i]){
+				resultPegs[i] = PegResponseColors.BLACK;
+				guessMirrorResponsePegs[i] = PegResponseColors.BLACK;
+				//MastermindModel.blackPegCount++;
+			}
+		}
+		//check color
+		guessIndex = 0;
 		while(guessIndex < 4){
 			int answerIndex = 0;
-			//check if peg at guessIndex is in correct position
-			//if it is, mark that answer position in response as accounted for (ie black)
-			if(resultPegs[guessIndex] == PegResponseColors.NONE && attempt[guessIndex] == answer[guessIndex]){
-				resultPegs[guessIndex] = PegResponseColors.BLACK;
-				MastermindModel.blackPegCount++;
-			}
-			//check rest of answer to see if peg at guessIndex is correct color
-			//if it is, mark that answer position in response as accounted for (ie white)
-			else{
-				while(answerIndex < 4){
-					if(attempt[guessIndex] == answer[answerIndex]){
-						if(resultPegs[answerIndex] == PegResponseColors.NONE){
-							resultPegs[answerIndex] = PegResponseColors.WHITE;
-							break; //exit loop, (we have accounted for this guess)
-						}
-							
-					}
-					answerIndex++;
+			while(answerIndex < 4){
+				if(attempt[guessIndex] == answer[answerIndex] && guessMirrorResponsePegs[guessIndex] != PegResponseColors.BLACK && resultPegs[answerIndex] != PegResponseColors.BLACK){
+					resultPegs[answerIndex] = PegResponseColors.WHITE;
+					break;//exit loop (we have accounted for this guess and needn't compare it to other pegs in the answer)
 				}
+				answerIndex++;
 			}
 			guessIndex++;
 		}
-		
 		
 		//add resultPegs[] to finalResultPegs[] in order of BLACK, WHITE, NONE
 		PegResponseColors[] finalResultPegs = new PegResponseColors[4];
@@ -118,27 +123,44 @@ public class MastermindController {
 		//set up final peg response
 		PegResponse result = new PegResponse(finalResultPegs);
 		
-		//update the model
-		/*MastermindModel.GameState[MastermindModel.currentTurn].guessThisTurn = attemptCombo;
-		MastermindModel.GameState[MastermindModel.currentTurn].pegResponseThisTurn = result;
-		MastermindModel.currentTurn++;
-		
-		//is game over?
-		if(MastermindModel.currentTurn == 12 || blackPegCount == 4 ){
-			//end game code
-		}*/
-		
 		//return peg response
 		return result;
 	}
 	
 	//asks for guess from user and returns the guess as a PegCombination once valid
 	public static PegCombination promptGuess(){
-		viewConsole.printPrompt();
-		Scanner kb = new Scanner(System.in);
-		String guess = kb.nextLine();
+		String guess;
+		PegCombination guessCombo = new PegCombination();
+		//prompts and takes guess - console
+		if(MastermindModel.playingOnConsole && MastermindModel.playerGuessing){
+			viewConsole.printColorChoices();
+			viewConsole.printPrompt();
+			Scanner kb = new Scanner(System.in);
+			guess = kb.nextLine();
+			guessCombo = PlayerController.submitGuess(guess);
+		}
+		else if(MastermindModel.playingOnConsole){
+			viewConsole.printColorChoices();
+			viewConsole.printPrompt();
+			PegCombination AIGuess = new PegCombination();
+			if(MastermindModel.currentTurn > 0){
+				AIGuess = AIController.getNextGuess(MastermindModel.GameState[MastermindModel.currentTurn - 1].pegCombination, MastermindModel.GameState[MastermindModel.currentTurn - 1].pegResponse);
+			}
+			else{
+				AIGuess = new PegCombination(new PegColors[]{PegColors.RED, PegColors.RED, PegColors.GREEN, PegColors.GREEN});
+			}
+			
+			System.out.println(AIGuess);
+			guessCombo = AIGuess;
+		}
+		//prompts and takes guess - GUI
+		else{
+			//TODO
+			guess = "";//fix later
+		}
 		
-		return PlayerController.submitGuess(guess);
+		//return PlayerController.submitGuess(guess);
+		return guessCombo;
 	}
 	
 	//checks if guess is a valid guess
@@ -199,6 +221,24 @@ public class MastermindController {
 		}
 		
 		return result;
+	}
+	
+	public static void resetGame(){
+		MastermindModel.GameState = new Turn[12];
+		MastermindModel.currentTurn = 0;
+		MastermindModel.blackPegCount = 0;
+		MastermindModel.playerGuessing = true;
+	}
+	
+	public static void playerOrAI(){
+		System.out.print("Player or AI guessing? {P/A}: ");
+		Scanner kb = new Scanner(System.in);
+		String input = kb.nextLine();
+		if(input.equals("P") || input.equals("A"))
+			MastermindModel.playerGuessing = (input.equals("P")) ? true:false;
+		else
+			playerOrAI();
+		
 	}
 	
 }
