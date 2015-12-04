@@ -30,6 +30,7 @@ public class MastermindController {
 	 */
 	public static void takeTurn(){
 		PegCombination guess = promptGuess();
+		while(guess == null) { guess = promptGuess(); }
 		PegResponse pegResponse = new PegResponse();
 		pegResponse = pegResponse(guess, MastermindModel.answer);
 		

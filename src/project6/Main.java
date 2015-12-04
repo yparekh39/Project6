@@ -4,9 +4,10 @@ public class Main {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		while(MastermindModel.currentTurn < 12 || MastermindModel.blackPegCount < 4){
-			PegCombination answer = AIController.generateRandomPegCombination();
-			MastermindController.setAnswer(answer);
+		PegCombination answer = AIController.generateRandomPegCombination();
+		MastermindController.setAnswer(answer);
+		System.out.println(MastermindModel.answer.toString());
+		while(MastermindModel.blackPegCount < 4 || MastermindModel.currentTurn < 12){
 			MastermindController.takeTurn();
 		}
 		//viewConsole.printBoard();
