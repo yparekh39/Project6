@@ -23,8 +23,7 @@ public class MastermindController {
 	}
 	
 	
-	/* Fundamental turn operation of game
-	 * 
+	/* TURN HANDLING
 	 * 1. Prompts the user for a guess
 	 * 2. Gives a user the response based on accuracy of guess
 	 */
@@ -37,25 +36,25 @@ public class MastermindController {
 		Turn turn = new Turn(guess, pegResponse);
 		MastermindModel.GameState[MastermindModel.currentTurn] = turn;
 		MastermindModel.currentTurn++;
-		viewConsole.printBoard();
+		//print board - console
+		if(MastermindModel.playerGuessing)
+			viewConsole.printBoard();
+		//print board - GUI
+		else{
+			//print board - GUI
+			//TODO
+		}
 		
-		/* Check if game over
-		 */
 		
 	}
 	
-	
-	
-	/* Takes a guess from the user (AI or Player) and updates the turn within the model with that guess and the 
-	 * corresponding peg response.
-	 * Then returns a peg response based on the accuracy of the guess.
-	 * The peg response at first mirrors the answer, so that pegs in the answer that are also in the guess
-	 * (whether position is correct or not) are marked in the peg response and thus not compared a second time against 
-	 * other pegs in the guess.
-	 * After the pegs in the guess have all been checked against the answer, the pegs are added into a final peg response
-	 * in the order BLACK, WHITE, NONE.
-	 * Ex: The accuracy check is BLACK NONE NONE WHITE. The final peg response is BLACK WHITE NONE NONE.
-	 */
+	/* GUESS HANDLING
+	* 1. Compares each guess peg to its parallel answer peg to determine
+	* if any are in the correct position. Flags pegs in both guess and local
+	* answer that are.
+	* 2. Compares pegs that were not in the correct position to the answer
+	* to determine if any are the correct color. Flags pegs in local answer
+	* that are.*/
 	public static PegResponse pegResponse(PegCombination attemptCombo, PegCombination answerCombo){
 		int guessIndex = 0;
 		PegColors[] attempt = attemptCombo.pegs;
@@ -67,14 +66,8 @@ public class MastermindController {
 		
 		/*Updates the current turn in the gamestate array with the current guess*/
 		
-		/* Check accuracy of guess
-		 * 1. Compares each guess peg to its parallel answer peg to determine
-		 * if any are in the correct position. Flags pegs in both guess and local
-		 * answer that are.
-		 * 2. Compares pegs that were not in the correct position to the answer
-		 * to determine if any are the correct color. Flags pegs in local answer
-		 * that are.
-		 */
+		
+		// NEW ALGORITHM
 		//check position
 		for(int i = 0; i < 4; i++){
 			if(attempt[i] == answer[i]){
@@ -88,7 +81,7 @@ public class MastermindController {
 		while(guessIndex < 4){
 			int answerIndex = 0;
 			while(answerIndex < 4){
-				if(attempt[guessIndex] == answer[answerIndex] && guessMirrorResponsePegs[guessIndex] == PegResponseColors.NONE && resultPegs[answerIndex] == PegResponseColors.NONE){
+				if(attempt[guessIndex] == answer[answerIndex] && guessMirrorResponsePegs[guessIndex] != PegResponseColors.BLACK && resultPegs[answerIndex] != PegResponseColors.BLACK){
 					resultPegs[answerIndex] = PegResponseColors.WHITE;
 					break;//exit loop (we have accounted for this guess and needn't compare it to other pegs in the answer)
 				}
@@ -97,7 +90,10 @@ public class MastermindController {
 			guessIndex++;
 		}
 		
-		/*
+		/* OLD ALGORITHM THAT HAS A BROKEN POSITION CHECKER
+		 * WE HAVE TO CHECK FOR POSITION OF ALL THE PEGS BEFORE CHECKING ANY OF THE COLORS
+		 * OR ELSE THE CORRECT POSITION PEGS WILL BE OVERLOOKED IF ANOTHER PEG AHEAD OF IT 
+		 * WAS THE CORRECT COLOR
 		//check accuracy of guess
 		while(guessIndex < 4){
 			int answerIndex = 0;
@@ -158,10 +154,19 @@ public class MastermindController {
 	
 	//asks for guess from user and returns the guess as a PegCombination once valid
 	public static PegCombination promptGuess(){
-		viewConsole.printColorChoices();
-		viewConsole.printPrompt();
-		Scanner kb = new Scanner(System.in);
-		String guess = kb.nextLine();
+		String guess;
+		//prompts and takes guess - console
+		if(MastermindModel.playerGuessing){
+			viewConsole.printColorChoices();
+			viewConsole.printPrompt();
+			Scanner kb = new Scanner(System.in);
+			guess = kb.nextLine();
+		}
+		//prompts and takes guess - GUI
+		else{
+			//TODO
+			guess = "";//fix later
+		}
 		
 		return PlayerController.submitGuess(guess);
 	}
@@ -231,6 +236,17 @@ public class MastermindController {
 		MastermindModel.currentTurn = 0;
 		MastermindModel.blackPegCount = 0;
 		MastermindModel.playerGuessing = true;
+	}
+	
+	public static void playerOrAI(){
+		System.out.print("Player or AI guessing? {P/A}: ");
+		Scanner kb = new Scanner(System.in);
+		String input = kb.nextLine();
+		if(input.equals("P") || input.equals("A"))
+			MastermindModel.playerGuessing = input == "P" ? true:false;
+		else
+			playerOrAI();
+		
 	}
 	
 }

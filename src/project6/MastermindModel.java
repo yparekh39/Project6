@@ -6,5 +6,6 @@ public class MastermindModel {
 	static int currentTurn = 0;	
 	static int blackPegCount = 0;
 	static boolean playerGuessing = true;
+	static boolean playingOnConsole = true;
 
 }
