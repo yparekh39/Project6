@@ -51,6 +51,6 @@ public class PegCombination {
 					
 			}
 		}
-		return null;
+		return result;
 	}
 }

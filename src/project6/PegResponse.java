@@ -41,6 +41,6 @@ public class PegResponse {
 					break;
 			}
 		}
-		return null;
+		return result;
 	}
 }

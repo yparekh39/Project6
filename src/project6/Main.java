@@ -6,6 +6,7 @@ public class Main {
 		// TODO Auto-generated method stub
 		PegCombination answer = AIController.generateRandomPegCombination();
 		MastermindController.setAnswer(answer);
+		System.out.println(MastermindModel.answer.toString());
 		MastermindController.takeTurn();
 		//viewConsole.printBoard();
 	}
