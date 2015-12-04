@@ -201,4 +201,10 @@ public class MastermindController {
 		return result;
 	}
 	
+	public static void resetGame(){
+		MastermindModel.GameState = new Turn[12];
+		MastermindModel.currentTurn = 0;
+		MastermindModel.blackPegCount = 0;
+	}
+	
 }
