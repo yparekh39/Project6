@@ -12,9 +12,13 @@ public class PegCombination {
 		pegs = new PegColors[4];
 	}
 	
-	public boolean isEquals(PegCombination[] combination) {
+	@Override
+	public boolean equals(Object combination) {
+		if(!(combination instanceof PegCombination)){
+			return false;
+		}
 		for(int i = 0; i < 3; i++) {
-			if (!(combination[i].equals(pegs[i]))) {
+			if (!(((PegCombination)combination).pegs[i].equals(pegs[i]))) {
 				return false;
 			}
 		}

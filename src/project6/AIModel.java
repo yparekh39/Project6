@@ -4,22 +4,12 @@ import java.util.HashSet;
 
 public class AIModel {
 	
-	private HashSet<PegCombination> totalCombinations;
-	private HashSet<PegCombination> validCombinations;
+	public static HashSet<PegCombination> totalCombinations = AIController.generateAllPegCombinations();
+	public static HashSet<PegCombination> validCombinations = new HashSet<PegCombination>(totalCombinations);
 	
-	AIModel() {
-        totalCombinations = new HashSet<PegCombination>(AIController.generateAllPegCombinations());
-		validCombinations = new HashSet<PegCombination>(totalCombinations);
+	public static void refreshModel() {
+		totalCombinations = AIController.generateAllPegCombinations();
+		validCombinations = new HashSet<PegCombination>(totalCombinations); 
 	}
-	
-	public HashSet<PegCombination> getTotalCombinations() {
-		return totalCombinations;
-	}
-	
-	public HashSet<PegCombination> getValidCombinations() {
-		return validCombinations;
-	}
-	
-	
 	
 }

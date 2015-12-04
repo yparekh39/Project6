@@ -18,7 +18,7 @@ public class MastermindController {
 	
 	/* Sets the correct answer given input from the user (AI or Player)
 	 */
-	public void setAnswer(PegCombination answer){
+	public static void setAnswer(PegCombination answer){
 		MastermindModel.answer = answer;
 	}
 	
@@ -28,10 +28,19 @@ public class MastermindController {
 	 * 1. Prompts the user for a guess
 	 * 2. Gives a user the response based on accuracy of guess
 	 */
-	public void takeTurn(){
+	public static void takeTurn(){
 		PegCombination guess = promptGuess();
-		PegResponse accuracyFeedback = new PegResponse();
-		accuracyFeedback = userGuess(guess);
+		PegResponse pegResponse = new PegResponse();
+		pegResponse = pegResponse(guess, MastermindModel.answer);
+		
+		Turn turn = new Turn(guess, pegResponse);
+		MastermindModel.GameState[MastermindModel.currentTurn] = turn;
+		MastermindModel.currentTurn++;
+		viewConsole.printBoard();
+		
+		/* Check if game over
+		 */
+		
 	}
 	
 	
@@ -46,11 +55,11 @@ public class MastermindController {
 	 * in the order BLACK, WHITE, NONE.
 	 * Ex: The accuracy check is BLACK NONE NONE WHITE. The final peg response is BLACK WHITE NONE NONE.
 	 */
-	public PegResponse userGuess(PegCombination attemptCombo){
+	public static PegResponse pegResponse(PegCombination attemptCombo, PegCombination answerCombo){
 		int guessIndex = 0;
 		int blackPegCount = 0; //used for win checking
 		PegColors[] attempt = attemptCombo.pegs;
-		PegColors[] answer = MastermindModel.answer.pegs;
+		PegColors[] answer = answerCombo.pegs;
 		//create default peg response (ie all clear pegs)
 		PegResponseColors[] resultPegs = new PegResponseColors[4];
 		for(int j = 0; j < 4; j++){ resultPegs[j] = PegResponseColors.NONE; }
@@ -110,38 +119,30 @@ public class MastermindController {
 		PegResponse result = new PegResponse(finalResultPegs);
 		
 		//update the model
-		MastermindModel.GameState[MastermindModel.currentTurn].guessThisTurn = attemptCombo;
+		/*MastermindModel.GameState[MastermindModel.currentTurn].guessThisTurn = attemptCombo;
 		MastermindModel.GameState[MastermindModel.currentTurn].pegResponseThisTurn = result;
 		MastermindModel.currentTurn++;
 		
 		//is game over?
 		if(MastermindModel.currentTurn == 12 || blackPegCount == 4 ){
 			//end game code
-		}
+		}*/
 		
 		//return peg response
 		return result;
 	}
 	
 	//asks for guess from user and returns the guess as a PegCombination once valid
-	public PegCombination promptGuess(){
+	public static PegCombination promptGuess(){
 		viewConsole.printPrompt();
 		Scanner kb = new Scanner(System.in);
-		char[] guess = kb.nextLine().toCharArray();
+		String guess = kb.nextLine();
 		
-		if(!legalGuess(guess)){
-			System.out.println("Invalid input. Please Guess Again.");
-			promptGuess();
-		}
-		
-		PegCombination attempt = new PegCombination();
-		attempt = charToPegCombination(guess);
-		
-		return attempt;
+		return PlayerController.submitGuess(guess);
 	}
 	
 	//checks if guess is a valid guess
-	public boolean legalGuess(char[] guess){
+	public static boolean legalGuess(char[] guess){
 		boolean legal = true;
 		if(guess.length > 4)
 			legal = false;
@@ -165,13 +166,13 @@ public class MastermindController {
 					legal = false;
 					break;
 			}
-			
+			i++;	
 		}
 		return legal;
 	}
 	
 	//converts a char[] (user input) into a peg combination
-	public PegCombination charToPegCombination(char[] guess){
+	public static PegCombination charToPegCombination(char[] guess){
 		PegCombination result = new PegCombination(new PegColors[4]);
 		
 		for(int i = 0; i < 4; i++){
@@ -199,8 +200,5 @@ public class MastermindController {
 		
 		return result;
 	}
-	
-	
-
 	
 }

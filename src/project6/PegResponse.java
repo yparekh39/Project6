@@ -11,9 +11,14 @@ public class PegResponse {
     	this.response = new PegResponseColors[4];
     }
     
-	public boolean isEquals(PegResponse[] pegResponse) {
+    @Override
+	public boolean equals(Object pegResponse) {
+		if (!(pegResponse instanceof PegResponse)) {
+			return false;
+		}
+		
 		for(int i = 0; i < 3; i++) {
-			if (!(pegResponse[i].equals(response[i]))) {
+			if (!(((PegResponse)pegResponse).response[i].equals(response[i]))) {
 				return false;
 			}
 		}
