@@ -7,7 +7,7 @@ public class Main {
 		PegCombination answer = AIController.generateRandomPegCombination();
 		MastermindController.setAnswer(answer);
 		System.out.println(MastermindModel.answer.toString());
-		while(MastermindModel.blackPegCount < 4 || MastermindModel.currentTurn < 12){
+		while(MastermindModel.blackPegCount < 4 && MastermindModel.currentTurn < 12){
 			MastermindController.takeTurn();
 		}
 		//viewConsole.printBoard();
