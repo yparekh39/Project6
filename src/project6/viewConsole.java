@@ -3,7 +3,7 @@ package project6;
 public class viewConsole {
 	//print the instructions
 	public static void printInstructions(){
-		System.out.println("Welcome to MattsterMind!");
+		System.out.println("Welcome to MasterMind!");
 	}
 	
 	//print the peg color choices
