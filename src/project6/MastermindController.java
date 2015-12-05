@@ -63,12 +63,29 @@ public class MastermindController {
 	
 	public static void takeGUITurn(String guess){
 		char[] charGuess = guess.toCharArray();
+		
 		if(!legalGuess(charGuess)){
 			Stage s = new Stage();
 			s.setTitle("Invalid Guess!");
+			s.setAlwaysOnTop(true);
 			s.show();
+			s.centerOnScreen();
 			return;
 		}
+		
+		PegResponse pegResponse = new PegResponse();
+		PegCombination pegCombination = charToPegCombination(charGuess);
+		pegResponse = pegResponse(pegCombination, MastermindModel.answer);
+		for(int i = 0; i < 4; i++){
+			if(pegResponse.response[i] == PegResponseColors.BLACK){
+				MastermindModel.blackPegCount++;
+			}
+		}
+		
+		Turn turn = new Turn(pegCombination, pegResponse);
+		MastermindModel.GameState[MastermindModel.currentTurn] = turn;
+		MastermindModel.currentTurn++;
+		
 	}
 	
 	/* GUESS HANDLING
@@ -250,6 +267,7 @@ public class MastermindController {
 		MastermindModel.currentTurn = 0;
 		MastermindModel.blackPegCount = 0;
 		MastermindModel.playerGuessing = true;
+		MastermindModel.answer = AIController.generateRandomPegCombination();
 	}
 	
 	public static void playerOrAI(){
@@ -261,6 +279,18 @@ public class MastermindController {
 		else
 			playerOrAI();
 		
+	}
+	
+	public static boolean UI(){
+		System.out.print("Console interface or GUI? {C/G}: ");
+		Scanner kb = new Scanner(System.in);
+		String input = kb.nextLine();
+		if(input.equals("C") || input.equals("G")){
+			if(input.equals("C")) { return false; }
+			else { return false; }
+		}
+		else
+			return UI();
 	}
 	
 }
