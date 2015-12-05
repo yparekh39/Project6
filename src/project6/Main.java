@@ -1,15 +1,24 @@
 package project6;
 
 import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 import javafx.stage.Stage;
+
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Main extends Application {
@@ -79,13 +88,66 @@ public class Main extends Application {
 			world.getChildren().add(board);
 			window.setCenter(world);
 			TextField playerInput = new TextField();
-			playerInput.setPromptText("");
+			String promptText = "The Response:";
+			if (MastermindModel.playerGuessing) { promptText = "Your Guess:"; }
+			Label label = new Label(promptText);
+			HBox hb = new HBox();
+			Button submit = new Button("Submit");
+			HBox hbSubmit = new HBox(10);
+			hbSubmit.getChildren().add(submit);
+			hb.getChildren().addAll(label, playerInput, hbSubmit);
+			hb.setSpacing(10);
+			hb.setPadding(new Insets(20, 25, 25, 85));
+			window.setBottom(hb);
 			Scene scene = new Scene(window, 500, 800);
 			primaryStage.setScene(scene);
 			primaryStage.show();
+			//generateShapes();
+			submit.setOnAction(new EventHandler<ActionEvent>(){
+
+				@Override
+				public void handle(ActionEvent event) {
+					// TODO Auto-generated method stub
+					String input = playerInput.getText();
+					if(MastermindModel.playerGuessing){ PlayerController.submitGuess(input); }
+				}
+				
+			});
 		}catch(Exception e){
 			e.printStackTrace();
 		}
+	}
+	
+	private ArrayList<Shape> generateShapes() {
+		
+		ArrayList<Shape> turnsAsShapes;
+		int radius = 500/8/2;
+		for (int i = 0; i < MastermindModel.currentTurn; i++){
+			for (int j = 0; j < 4; j++){
+				int xGui = j*(500/8);
+				int yGui = i*(700/12);
+				Shape s = new Circle(radius+xGui, radius+yGui, radius);
+				if (MastermindModel.GameState[i].pegCombination.pegs[i] == PegColors.BLUE){
+					s.setFill(Color.BLUE);
+				} else if (MastermindModel.GameState[i].pegCombination.pegs[i] == PegColors.RED){
+					s.setFill(Color.RED);
+				} else if (MastermindModel.GameState[i].pegCombination.pegs[i] == PegColors.YELLOW){
+					s.setFill(Color.YELLOW);
+				} else if (MastermindModel.GameState[i].pegCombination.pegs[i] == PegColors.ORANGE){
+					s.setFill(Color.ORANGE);
+				} else if (MastermindModel.GameState[i].pegCombination.pegs[i] == PegColors.PURPLE){
+					s.setFill(Color.PURPLE);
+				} else if (MastermindModel.GameState[i].pegCombination.pegs[i] == PegColors.GREEN){
+					s.setFill(Color.GREEN);
+				}
+			}
+			
+		}
+		
+		
+		
+		
+		return null;
 	}
 
 //	public static void main(String[] args) {

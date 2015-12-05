@@ -3,6 +3,10 @@ package project6;
 import java.util.HashSet;
 import java.util.Scanner;
 
+import javafx.scene.Scene;
+import javafx.scene.text.Text;
+import javafx.stage.Stage;
+
 public class MastermindController {
 	
 	/* Runs the game
@@ -65,6 +69,16 @@ public class MastermindController {
 		
 		else
 			return;
+	}
+	
+	public static void takeGUITurn(String guess){
+		char[] charGuess = guess.toCharArray();
+		if(!legalGuess(charGuess)){
+			Stage s = new Stage();
+			s.setTitle("Invalid Guess!");
+			s.show();
+			return;
+		}
 	}
 	
 	/* GUESS HANDLING
