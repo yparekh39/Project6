@@ -4,6 +4,7 @@ public class viewConsole {
 	//print the instructions
 	public static void printInstructions(){
 		System.out.println("Welcome to MasterMind!");
+		System.out.println("You may quit at any time by typing \"quit\"");
 	}
 	
 	//print the peg color choices

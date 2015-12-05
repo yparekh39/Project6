@@ -7,5 +7,6 @@ public class MastermindModel {
 	static int blackPegCount = 0;
 	static boolean playerGuessing = true;
 	static boolean playingOnConsole = true;
+	static boolean quitGame = false;
 
 }

@@ -34,28 +34,31 @@ public class MastermindController {
 	public static void takeTurn(){
 		PegCombination guess = promptGuess();
 		while(guess == null) { guess = promptGuess(); }
-		PegResponse pegResponse = new PegResponse();
-		pegResponse = pegResponse(guess, MastermindModel.answer);
-		
-		for(int i = 0; i < 4; i++){
-			if(pegResponse.response[i] == PegResponseColors.BLACK){
-				MastermindModel.blackPegCount++;
+		if(!MastermindModel.quitGame){
+			PegResponse pegResponse = new PegResponse();
+			pegResponse = pegResponse(guess, MastermindModel.answer);
+			
+			for(int i = 0; i < 4; i++){
+				if(pegResponse.response[i] == PegResponseColors.BLACK){
+					MastermindModel.blackPegCount++;
+				}
+			}
+			
+			Turn turn = new Turn(guess, pegResponse);
+			MastermindModel.GameState[MastermindModel.currentTurn] = turn;
+			MastermindModel.currentTurn++;
+			//print board - console
+			if(MastermindModel.playingOnConsole)
+				viewConsole.printBoard();
+			//print board - GUI
+			else{
+				//print board - GUI
+				//TODO
 			}
 		}
 		
-		Turn turn = new Turn(guess, pegResponse);
-		MastermindModel.GameState[MastermindModel.currentTurn] = turn;
-		MastermindModel.currentTurn++;
-		//print board - console
-		if(MastermindModel.playingOnConsole)
-			viewConsole.printBoard();
-		//print board - GUI
-		else{
-			//print board - GUI
-			//TODO
-		}
-		
-		
+		else
+			return;
 	}
 	
 	public static void takeGUITurn(String guess){
@@ -151,7 +154,12 @@ public class MastermindController {
 			viewConsole.printPrompt();
 			Scanner kb = new Scanner(System.in);
 			guess = kb.nextLine();
-			guessCombo = PlayerController.submitGuess(guess);
+			if(guess.equals("quit")){
+				MastermindModel.quitGame = true;
+				return new PegCombination(new PegColors[]{PegColors.BLUE, PegColors.BLUE, PegColors.BLUE, PegColors.BLUE});
+			}
+			else
+				guessCombo = PlayerController.submitGuess(guess);
 		}
 		else if(MastermindModel.playingOnConsole){
 			viewConsole.printColorChoices();
