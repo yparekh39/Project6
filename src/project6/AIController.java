@@ -3,6 +3,7 @@ package project6;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Random;
+import java.util.Scanner;
 
 public class AIController {
 	
@@ -82,5 +83,29 @@ public class AIController {
 		
 		return MastermindController.charToPegCombination(guessArray);
 	}
+	
+	//FOR WHEN AI IS GUESSING
+		public static PegResponse getPegResponseFromPlayer(){
+			System.out.println("How accurate is this guess?");
+			Scanner kb = new Scanner(System.in);
+			String pegResponse = kb.nextLine();
+			char[] pegResponseChar = pegResponse.toCharArray();
+			PegResponse finalPegResponse = new PegResponse();
+			for(int i = 0; i < 4; i ++){
+				switch(pegResponseChar[i]){
+					case 'B':
+						finalPegResponse.response[i] = PegResponseColors.BLACK;
+						break;
+					case 'W':
+						finalPegResponse.response[i] = PegResponseColors.WHITE;
+						break;
+					case 'X':
+						finalPegResponse.response[i] = PegResponseColors.NONE;
+						break;
+				}
+			}
+			
+			return finalPegResponse;
+		}
 	
 }
