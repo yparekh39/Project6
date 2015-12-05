@@ -36,5 +36,7 @@ public class viewConsole {
 		System.out.print("\nGuess: ");
 	}
 	
+	
+	
 
 }

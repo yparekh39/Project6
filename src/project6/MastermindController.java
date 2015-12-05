@@ -32,7 +32,17 @@ public class MastermindController {
 		while(guess == null) { guess = promptGuess(); }
 		if(!MastermindModel.quitGame){
 			PegResponse pegResponse = new PegResponse();
-			pegResponse = pegResponse(guess, MastermindModel.answer);
+			//AI SECTION - GET PEG RESPONSE FROM USER
+			if(!MastermindModel.playerGuessing){
+				pegResponse = AIController.getPegResponseFromPlayer();
+				PegResponse cheatingCheck = pegResponse(guess, MastermindModel.answer);
+				if(!pegResponse.equals(cheatingCheck)){
+					System.out.println("You're cheating! That's not the right peg response!");
+					pegResponse = pegResponse(guess, MastermindModel.answer);
+				}
+			}
+			else
+				pegResponse = pegResponse(guess, MastermindModel.answer);
 			
 			for(int i = 0; i < 4; i++){
 				if(pegResponse.response[i] == PegResponseColors.BLACK){
